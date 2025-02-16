@@ -1,0 +1,222 @@
+In the process of detecting spelling errors from handwritten images, there are two phases. The initial phase involves recognizing 
+Tamil text from handwritten notes, particularly those with spelling mistakes. Subsequently, the detected errors are corrected using a 
+combination of language and channel models. 
+
+1. Recognition of Handwritten Tamil Text with Spelling Errors
+
+To recognize the handwritten text, several steps must be performed
+
+Load Handwritten Image
+Thresholding
+Dilation
+line segmentation
+Word Segmentation
+Letter Segmentation
+Enhancing Letter images
+Letter Recognition using CNN 
+Unicode-based Letter Combination
+
+1.1 Load Handwritten Image: 
+
+For loading handwritten images, we utilize the OpenCV Python module. It reads the image file, providing a BGR image format, which we then convert 
+to RGB format. Additionally, we perform resizing and interpolation to ensure a clear view of the picture.
+
+1.2  Thresholding 
+
+Thresholding is a crucial preprocessing step in the analysis of handwritten images, serving to enhance the clarity of text and facilitate subsequent segmentation tasks.
+In the context of our research, thresholding enables the isolation of handwritten content from background noise and clutter, thereby 
+improving the accuracy of spell error detection algorithms. The adjustment of this threshold value enables the transformation of brighter pixels to darker ones and vice versa, 
+effectively enhancing the contrast between the text and its background.
+
+1.3 Dilation
+
+Dilation is a fundamental morphological operation employed in image processing to expand or "fluff up" regions of interest within an image. 
+This operation involves the application of a structured element, or kernel, across the entire image. When the kernel encounters a darker pixel, 
+it extends the influence of that pixel to neighboring areas, thereby increasing their darkness as well. The extent of this expansion is determined 
+by the size of the kernel.
+
+The selection of an appropriate kernel size is pivotal in achieving desired segmentation outcomes. For instance, when segmenting lines of text, a 
+larger kernel size is advantageous as it ensures the cohesive grouping of adjacent pixels, thereby preserving the integrity of the text lines. 
+Conversely, when segmenting individual words or letters, a smaller kernel size is preferred to maintain finer details and prevent excessive 
+merging of adjacent elements. Thus, the meticulous assignment of kernel size is paramount in optimizing the dilation process for specific 
+segmentation tasks, ultimately contributing to the accuracy and efficacy of subsequent analyses in handwritten text recognition and spell 
+error detection.
+
+1.4 Line segmentation
+
+To initiate the text recognition process, the extraction of individual lines of text from the handwritten image is imperative. 
+Achieving this entails employing a dilation operation with a sufficiently large kernel size. This larger kernel facilitates the segmentation of 
+text lines by expanding and connecting adjacent dark regions, thereby ensuring the integrity of the extracted lines.
+
+Following the dilation step, the identification of line boundaries is facilitated through the utilization of contours. Contours 
+delineate the borders of separation between darker and brighter pixels within the image. By leveraging contours, bounding boxes can be 
+generated around each line of text, enabling precise localization and extraction of textual content from the image. This delineation is critical 
+for subsequent stages of text recognition, facilitating accurate analysis and interpretation of the handwritten content.
+
+    image = resize(img_path)
+    thresh_img = thresholding(image)
+    dilated = dilation(thresh_img, kernel_size = (20, 85))
+    sorted_contour_lines = contours_by_y_axis(dilated)
+
+1.5 Word segmentation
+
+After segmenting each line of text, the next step involves segmenting individual words from each line. This process mirrors the line segmentation 
+process, but with a smaller dilation kernel compared to the one used for segmenting lines. By applying this process iteratively to each line of 
+text, we can effectively extract and segment individual words, preparing them for further analysis and recognition.
+
+function word_segmentation(img, dilated_image, sorted_contours_lines):
+    img_copy = create_copy(img)
+    words_list = empty_list 
+    
+    for each line in sorted_contours_lines:
+        line_bbox = get_bounding_box(line)  
+        line_roi = extract_roi(dilated_image, line_bbox)  
+        
+        sorted_contour_words = sort_contours_by_x(line_roi)  
+        
+        for each word in sorted_contour_words:
+            if contour_area(word) < threshold_area:
+                continue  # Skip contours with area less than threshold
+                
+            word_bbox = get_bounding_box(word) 
+            word_global_bbox = adjust_bbox_coordinates(word_bbox, line_bbox) 
+            
+            add_to_words_list(words_list, word_global_bbox) 
+            draw_bbox_on_image(img_copy, word_global_bbox)  
+    
+    return words_list 
+
+1.6 Letter segmentation
+
+First, we segment words from the handwritten image, ensuring that each word is accurately extracted and preserved in its original order. 
+Once we have extracted the words, we can confidently proceed to segment each word into its constituent letters. This sequential approach 
+guarantees that the letters are properly aligned with their respective words, preserving the contextual meaning of the text. While this process 
+may seem lengthy, it ultimately ensures the integrity of the text and facilitates subsequent stages of analysis, such as letter recognition and
+spell error detection. By maintaining a clear flow and order of words
+
+1.7 Enhancing Letter images
+
+This process aims to optimize the image for input into the CNN model specialized in recognizing handwritten letters. 
+It involves cropping the image to eliminate padding, ensuring only the individual letter remains without any extra blank space. 
+Additionally, contrast and highlights are adjusted to enhance recognition. To maintain image quality while resizing to the CNN model's 
+required 64 x 64 dimensions, the cv2.INTER_NEAREST_EXACT interpolation method is employed. This method minimizes loss of image quality by 
+preserving pixel values during resizing. By combining PIL and OpenCV in Python, this process ensures that the image is finely tuned for 
+accurate letter recognition by the CNN model.
+
+for each word in sentence:
+    resized_letter_list = []
+
+    for each letter in word:
+        img_pil = Image.fromarray(cv2.cvtColor(letter, cv2.COLOR_BGR2RGB))
+        img_contrast = ImageEnhance.Contrast(img_pil)
+        enhanced_img = img_contrast.enhance(2)
+        enhanced_img_np = cv2.cvtColor(np.array(enhanced_img), cv2.COLOR_RGB2BGR)
+        gray_img = cv2.cvtColor(enhanced_img_np, cv2.COLOR_BGR2GRAY)
+
+        top_boundary = 0
+        for each row in range(gray_img.shape[0]):
+            if np.any(gray_img[row] < 10):
+                top_boundary = row
+                break
+
+        bottom_boundary = gray_img.shape[0]
+        for each row in range(gray_img.shape[0]-1, -1, -1):
+            if np.any(gray_img[row] < 10):
+                bottom_boundary = row
+                break
+
+        cropped_img = enhanced_img_np[
+                        top_boundary:bottom_boundary, :
+                    ]
+        try:
+            resized_img = cv2.resize(
+                    cropped_img, (64, 64), 
+                    interpolation=cv2.INTER_NEAREST_EXACT
+                )
+        except:
+            continue
+
+        resized_letter_list.append(resized_img)
+    resized_sentence.append(resized_letter_list)
+
+
+1.8 Letter Recognition using CNN 
+
+we used neural network model to recognise each tamil letter. 
+This model is a convolutional neural network (CNN) designed for Tamil character recognition. It consists of multiple convolutional layers 
+followed by max-pooling layers to extract features from input images. The convolutional layers use the ReLU activation function to introduce 
+non-linearity into the model. Max-pooling layers are utilized to reduce spatial dimensions and retain important features.
+The final layer of the model is a fully connected dense layer with softmax activation, which produces a probability distribution over the 
+156 classes of Tamil characters for prediction. The model is compiled using the Adam optimizer and sparse categorical cross-entropy loss function.
+During training, the model is trained on a training dataset and evaluated on a validation dataset over 50 epochs. The training process aims to 
+minimize the loss function and maximize accuracy. Once trained, the model is saved for character recognition tasks. The CNN model predicts the class number 
+corresponds to a specific Tamil character. Each class number is mapped to a Unicode value representing the corresponding Tamil character. 
+
+
+
+
+1.9 Unicode-based Letter Combination
+
+In Tamil language, combining characters follows specific rules outlined by Unicode standards. These rules ensure that combined characters are 
+formed correctly and maintain the intended meaning of the text. For example, when combining individual letters recognised by the CNN model
+in a particular order like "அ", "ை", and "ல", while combining the letters the result formed out would be "ைஅல" which indeed 
+violate the correct order of characters. It's crucial to adhere to the correct order of characters to preserve the word's integrity.
+To address this, after recognizing individual letters and converting them to Unicode format, a post-processing step is required to combine 
+these letters into words while respecting Unicode rules. This process involves analyzing the sequence of recognized letters and determining 
+the correct order of combination based on Unicode standards.
+
+reorder1:
+    for each character in the string:
+        if the current character is "ெ" and the character two positions ahead is "ா":
+            swap the current character with the next one
+            set the next character to "ொ"
+            remove the character two positions ahead
+
+reorder2:
+    for each character in the string:
+        if the current character is "ை":
+            swap the current character with the next one
+
+reorder3:
+    for each character in the string:
+        if the current character is "ே" and the character two positions ahead is "ா":
+            swap the current character with the next one
+            set the next character to "ோ"
+            remove the character two positions ahead
+
+reorder4:
+    for each character in the string:
+        if the current character is "ெ" and the character two positions ahead is not "ா":
+            swap the current character with the next one
+
+reorder5:
+    for each character in the string:
+        if the current character is "ே" and the character two positions ahead is not "ா":
+            swap the current character with the next one
+
+reorder6:
+    for each character in the string:
+        if the current character is "ெ" and the character two positions ahead is "ள":
+            swap the current character with the next one
+            set the next character to "ௌ"
+            remove the character two positions ahead
+
+These processes are designed to address specific Tamil character combinations and adjust them as per Unicode rules. 
+By sequentially applying these processes to each recognized word, the correct sentence structure can be achieved, preserving the 
+integrity and meaning of the text.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
