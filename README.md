@@ -1,91 +1,112 @@
-**Handwritten Spelling Error Recognition and Correction in Tamil Language: A Context-Aware Approach**
+# **Handwritten Spelling Error Recognition and Correction in Tamil Language: A Context-Aware Approach**
 
-**Authors**
+---
 
-Hari Krishnan J – 21MID0090, VIT Vellore (hariskrishnan.j2021@vitstudent.ac.in)
-Arjun S – 21MID0088, VIT Vellore (arjun.s2021c@vitstudent.ac.in)
-Shiny S – 21MID0079, VIT Vellore (shiny.2021@vitstudent.ac.in)
+## 📜 **Abstract**
 
-**Abstract**
+Correcting spelling errors in **handwritten Tamil text** presents considerable challenges due to its intricate character set. **Handwriting styles vary significantly**, and words with similar sounds but different spellings further complicate accurate recognition.
 
-Correcting spelling errors in handwritten Tamil text presents considerable challenges due to its intricate character set. Handwriting styles vary significantly, and words with similar sounds but different spellings further complicate accurate recognition.
+This project integrates **neural networks** and **natural language processing (NLP)** techniques to develop a **context-aware spelling correction system** for handwritten Tamil text. The solution aims to:
 
-This project integrates neural networks and natural language processing (NLP) techniques to develop a context-aware spelling correction system for handwritten Tamil text. The solution aims to:
+✅ **Detect and correct spelling errors.**  
+✅ **Understand the contextual significance of words.**  
+✅ **Address challenges like character similarity and ambiguous handwriting.**  
 
-Detect and correct spelling errors.
-Understand the contextual significance of words.
-Address challenges like character similarity and ambiguous handwriting.
-By leveraging deep learning and NLP, this model ensures improved accuracy in handwritten Tamil text recognition and correction.
+By leveraging **deep learning and NLP**, this model ensures **improved accuracy** in handwritten Tamil text recognition and correction.
 
-Keywords: Handwritten text, Neural networks, Natural language processing, Tamil script, Spelling correction.
+**Keywords:** Handwritten text, Neural networks, Natural language processing, Tamil script, Spelling correction.
 
-**Introduction**
+---
 
-Tamil, one of the oldest Dravidian languages, has a complex script with 247 characters comprising:
+## 📖 **Introduction**
 
-12 vowels (உயிர் எழுத்து)
-18 consonants (மெய் எழுத்து)
-1 special letter (ஆயுத எழுத்து)
-Due to these complexities, even minor variations in letters can lead to incorrect words, making spelling errors common. This is further exacerbated by:
+Tamil, one of the **oldest Dravidian languages**, has a complex script with **247 characters**, including:
 
-Variability in handwriting styles.
-Decreasing proficiency in written Tamil, even among fluent speakers.
-The lack of automated tools for effective Tamil spelling correction.
-This project digitizes handwritten Tamil text using Unicode and applies machine learning models to detect and correct errors based on context. The goal is to provide a self-learning tool for students and language enthusiasts, enabling them to write Tamil accurately without external assistance.
+- **12 vowels** (*உயிர் எழுத்து*)  
+- **18 consonants** (*மெய் எழுத்து*)  
+- **1 special letter** (*ஆயுத எழுத்து*)  
 
-**Project Structure**
+Due to these complexities, even **minor variations** in letters can lead to incorrect words, making spelling errors common. This is further exacerbated by:
 
-**📂 Dataset & Preprocessing**
+🔹 **Variability in handwriting styles.**  
+🔹 **Decreasing proficiency in written Tamil, even among fluent speakers.**  
+🔹 **The lack of automated tools for effective Tamil spelling correction.**  
 
-class_to_unicode.csv – Mapping of handwritten Tamil characters to Unicode.
-class_unicode_mapper.py – Converts handwritten text to Unicode.
-word_segmentation.py – Splits handwritten input into meaningful word segments.
-letter_segmentation.py – Extracts individual Tamil letters from words.
+This project **digitizes handwritten Tamil text** using **Unicode** and applies **machine learning models** to detect and correct errors **based on context**. The goal is to provide a **self-learning tool** for students and language enthusiasts, enabling them to **write Tamil accurately** without external assistance.
 
-**📂 Model & Algorithms**
+---
 
-channel_model.py – Implements the spelling correction model.
-combined_model.py – Merges multiple correction approaches.
-com_1_edit_distance.py – Computes edit distance to find the most probable corrections.
-compute_edit_distance.ipynb – Jupyter notebook for analyzing edit distances.
-compute_error.ipynb – Evaluates model accuracy.
+## 📂 **Project Structure**
+```
+📂 Dataset & Preprocessing
+│── class_to_unicode.csv       # Mapping of handwritten Tamil characters to Unicode
+│── class_unicode_mapper.py    # Converts handwritten text to Unicode
+│── word_segmentation.py       # Splits handwritten input into meaningful word segments
+│── letter_segmentation.py     # Extracts individual Tamil letters from words
+│
+📂 Model & Algorithms
+│── channel_model.py           # Implements the spelling correction model
+│── combined_model.py          # Merges multiple correction approaches
+│── com_1_edit_distance.py     # Computes edit distance to find the most probable corrections
+│── compute_edit_distance.ipynb # Jupyter notebook for analyzing edit distances
+│── compute_error.ipynb        # Evaluates model accuracy
+│
+📂 Handwriting Recognition & Correction
+│── tamil_character_recognition.py # Identifies Tamil characters from handwritten input
+│── sentence_recognition.ipynb     # Processes entire sentences for corrections
+│── main.py                        # Main execution script
+│
+📂 Miscellaneous
+│── text.txt                       # Sample text for testing
+```
 
-**📂 Handwriting Recognition & Correction**
+---
 
-tamil_character_recognition.py – Identifies Tamil characters from handwritten input.
-sentence_recognition.ipynb – Processes entire sentences for corrections.
-main.py – Main execution script.
+## ⚙️ **Installation & Setup**
 
-**📂 Miscellaneous**
-
-text.txt – Sample text for testing.
-Installation & Setup
-Prerequisites
+### **🔹 Prerequisites**
 Ensure you have the following installed:
 
-Python 3.x
-TensorFlow / PyTorch
-OpenCV
-NumPy
-Pandas
+- **Python 3.x**  
+- **TensorFlow / PyTorch**  
+- **OpenCV**  
+- **NumPy**  
+- **Pandas**  
 
-**Installation**
-**Clone this repository:**
+### **📥 Installation**
+Clone this repository:
+
+```bash
 git clone https://github.com/yourusername/your-repo-name.git
+```
 
-**Install dependencies:**
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-**Run the model:**
+Run the model:
+
+```bash
 python main.py
+```
 
-**Usage**
-Provide handwritten Tamil text as input.
-The system converts it to digital form using Unicode.
-The model identifies and corrects spelling errors based on context.
-Outputs the corrected Tamil text.
+---
 
-Future Enhancements
-🔹 Improve handwriting recognition using larger datasets.
-🔹 Enhance contextual accuracy for better spelling correction.
-🔹 Develop a web or mobile interface for broader accessibility.
+## 🚀 **Usage**
+
+1️⃣ **Provide handwritten Tamil text** as input.  
+2️⃣ The system **converts it to digital form using Unicode**.  
+3️⃣ The model **identifies and corrects spelling errors based on context**.  
+4️⃣ Outputs the **corrected Tamil text**.  
+
+---
+
+## 🎯 **Future Enhancements**
+
+🔹 **Improve handwriting recognition** using larger datasets.  
+🔹 **Enhance contextual accuracy** for better spelling correction.  
+🔹 **Develop a web or mobile interface** for broader accessibility.  
+
+---
