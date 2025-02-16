@@ -1,11 +1,13 @@
-**Handwritten Spelling Error Recognition and Correction in Tamil Language: A Context-Aware Approach
-**
+**Handwritten Spelling Error Recognition and Correction in Tamil Language: A Context-Aware Approach**
+
 **Authors**
+
 Hari Krishnan J – 21MID0090, VIT Vellore (hariskrishnan.j2021@vitstudent.ac.in)
 Arjun S – 21MID0088, VIT Vellore (arjun.s2021c@vitstudent.ac.in)
 Shiny S – 21MID0079, VIT Vellore (shiny.2021@vitstudent.ac.in)
 
 **Abstract**
+
 Correcting spelling errors in handwritten Tamil text presents considerable challenges due to its intricate character set. Handwriting styles vary significantly, and words with similar sounds but different spellings further complicate accurate recognition.
 
 This project integrates neural networks and natural language processing (NLP) techniques to develop a context-aware spelling correction system for handwritten Tamil text. The solution aims to:
@@ -18,6 +20,7 @@ By leveraging deep learning and NLP, this model ensures improved accuracy in han
 Keywords: Handwritten text, Neural networks, Natural language processing, Tamil script, Spelling correction.
 
 **Introduction**
+
 Tamil, one of the oldest Dravidian languages, has a complex script with 247 characters comprising:
 
 12 vowels (உயிர் எழுத்து)
@@ -30,8 +33,9 @@ Decreasing proficiency in written Tamil, even among fluent speakers.
 The lack of automated tools for effective Tamil spelling correction.
 This project digitizes handwritten Tamil text using Unicode and applies machine learning models to detect and correct errors based on context. The goal is to provide a self-learning tool for students and language enthusiasts, enabling them to write Tamil accurately without external assistance.
 
-**Project Structure
-📂 Dataset & Preprocessing**
+**Project Structure**
+
+**📂 Dataset & Preprocessing**
 
 class_to_unicode.csv – Mapping of handwritten Tamil characters to Unicode.
 class_unicode_mapper.py – Converts handwritten text to Unicode.
